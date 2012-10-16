@@ -1,16 +1,11 @@
 from pyDB import *
 
-a=DF(["A"],["B","C"])
-b=DF(["E"], ["F","A"])
-
-
-f=CDF([a,b], ["A","B","C","D","E","F"])
-
-
-
+f=CDF()
+f.from_parse("A->B C, E->F A","A,B,C,D,E,F")
+print str(f)
 c=f.fnbc()
 
-print "clausura= "
+print "Forma Normal de Boyce Codd= "
 c=[str(x) for x in c]
 c.sort()
 for i in c:

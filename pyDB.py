@@ -9,7 +9,7 @@ def subconjuntos(conjunto):
         
 
 class DF(object): #dependencia funcional a->b
-    def __init__(self, a, b):
+    def __init__(self, a=[], b=[]):
 
         self.a=set(a)
         self.b=set(b)
@@ -20,6 +20,14 @@ class DF(object): #dependencia funcional a->b
         
     def atributos(self):
         return self.a.union(self.b)
+
+    def from_parse(self, cadena):
+        a,b=cadena.split("->",2)
+        a=filter(lambda x: x!="", a.split(" "))
+        b=filter(lambda x: x!="", b.split(" "))
+        self.a=set(a)
+        self.b=set(b)
+        
     def __eq__(self, other):
         return self.a==other.a and self.b==other.b
         
@@ -37,7 +45,7 @@ class DF(object): #dependencia funcional a->b
         return result
         
 class CDF(object): #conjunto de dependencias funcionales
-    def __init__(self, f, atributos=set()):
+    def __init__(self, f=[], atributos=set()):
         self.f=set(f)
         self.atr=set(atributos)
 
@@ -113,6 +121,13 @@ class CDF(object): #conjunto de dependencias funcionales
                             break
         return result
 
+    def from_parse(self, cadena, s_atributos=""):
+        dfs=cadena.split(",")
+        self.atr=set(filter(lambda x: x!="", s_atributos.split(","))) # TODO mejorar el parseo para que no sea solo con comas
+        for i in dfs:
+            new = DF()
+            new.from_parse(i)
+            self.f.add(new)
         
     def __str__(self):
         result = "{"

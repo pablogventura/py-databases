@@ -23,6 +23,9 @@ class DF(object): #dependencia funcional a->b
     def __eq__(self, other):
         return self.a==other.a and self.b==other.b
         
+    def __hash__(self):
+        return hash((tuple(self.a),tuple(self.b)))
+        
     def __str__(self):
         result = "("
         for i in self.a:
@@ -93,7 +96,10 @@ class CDF(object): #conjunto de dependencias funcionales
                         ya_esta=False # sino donde se pone en False?
                         for n in self.f:
                             if not n.es_trivial():
-                                if not DF(n.a,i) in list(f_mas):
+                                print DF(n.a,i) in f_mas
+                                print DF(n.a,i)
+                                #print f_mas
+                                if not DF(n.a,i) in f_mas:
                                     
                                     if n.a.isdisjoint(n.b):
                                         result.remove(i)
@@ -101,6 +107,8 @@ class CDF(object): #conjunto de dependencias funcionales
                                         result.append(temp)
                                         temp=n.a.union(n.b)
                                         result.append(temp)
+
+
                                         ya_esta=True
                                         break
                         if ya_esta:

@@ -37,18 +37,20 @@ class DF(object): #dependencia funcional a->b
         return result
         
 class CDF(object): #conjunto de dependencias funcionales
-    def __init__(self, f, atributos=None):
+    def __init__(self, f, atributos=set()):
         self.f=set(f)
-        if not atributos == None:
-            self.atr=set(atributos)
+        self.atr=set(atributos)
 
     def atributos(self):
-        
-        result=set()
-        for i in self.f:
-            result=result.union(i.a)
-            result=result.union(i.b)
-        return self.atr
+        if len(self.atr) > 0:
+            result = self.atr
+        else:
+            result=set()
+            for i in self.f:
+                result=result.union(i.a)
+                result=result.union(i.b)
+
+        return result
         
     def clausura_de_atributos(self, atributos):
         result = set(atributos)
@@ -85,10 +87,9 @@ class CDF(object): #conjunto de dependencias funcionales
         anterior=[]
         contador = 0
         while result != anterior:
-            anterior=result
+            anterior=result[:] # para hacer una copia real
             for i in result:
                 contador=contador +1
-                print str(contador) + "|" + str(i)
                 for j in subconjuntos(i):
                     
                     a_mas=self.clausura_de_atributos(j)
@@ -96,12 +97,9 @@ class CDF(object): #conjunto de dependencias funcionales
                         ya_esta=False # sino donde se pone en False?
                         for n in self.f:
                             if not n.es_trivial():
-                                print DF(n.a,i) in f_mas
-                                print DF(n.a,i)
-                                #print f_mas
                                 if not DF(n.a,i) in f_mas:
-                                    
-                                    if n.a.isdisjoint(n.b):
+                                    if n.a.isdisjoint(n.b) and not i.isdisjoint(n.b):
+                                        # es posible que la segunda condicion tenga que ver con F_i
                                         result.remove(i)
                                         temp = i-n.b
                                         result.append(temp)
@@ -113,8 +111,6 @@ class CDF(object): #conjunto de dependencias funcionales
                                         break
                         if ya_esta:
                             break
-                    #else:
-                    #    hecho = True
         return result
 
         

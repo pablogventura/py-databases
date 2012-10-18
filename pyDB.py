@@ -84,42 +84,42 @@ class CDF(object): #conjunto de dependencias funcionales
         for i in subconjuntos(ri):
             pass #TODO
         return d.es_trivial() or True 
-
+    
+    def esta_en_f_mas(self, d):
+        return d.b <= self.clausura_de_atributos(d.a)
         
     
     def fnbc(self):
 
         result=[self.atributos()]
         hecho=False
-        f_mas=self.clausura()
         anterior=[]
         contador = 0
+        resultado=[]
         while result != anterior:
             anterior=result[:] # para hacer una copia real
             for i in result:
-                contador=contador +1
                 for j in subconjuntos(i):
-                    
                     a_mas=self.clausura_de_atributos(j)
                     if not (a_mas.isdisjoint(i - j) or i <= a_mas):
                         ya_esta=False # sino donde se pone en False?
                         for n in self.f:
                             if not n.es_trivial():
-                                if not DF(n.a,i) in f_mas:
+                                if not self.esta_en_f_mas(DF(n.a,i)):
                                     if n.a.isdisjoint(n.b) and not i.isdisjoint(n.b):
                                         # es posible que la segunda condicion tenga que ver con F_i
+                                        contador = contador + 1
                                         result.remove(i)
                                         temp = i-n.b
-                                        result.append(temp)
+                                        resultado.append(temp)
+                                        print "R" + str(contador) + " = " + temp
                                         temp=n.a.union(n.b)
                                         result.append(temp)
-
-
                                         ya_esta=True
                                         break
                         if ya_esta:
                             break
-        return result
+        return resultado + result
 
     def from_parse(self, cadena, s_atributos=""):
         dfs=cadena.split(",")

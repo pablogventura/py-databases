@@ -1,0 +1,1 @@
+Libreria Python para el procesamiento de dependencias funcionales, capacidad para calclular clausuras y normalización.
